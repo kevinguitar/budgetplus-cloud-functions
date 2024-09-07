@@ -65,9 +65,14 @@ async function sendNotificationToUsers(
         message = newMemberName + "已加入" + bookName;
         break;
       }
+      case "ja": {
+        title = "台帳に新しいメンバーがいます";
+        message = newMemberName + "は" + bookName + "に参加しました";
+        break;
+      }
       default: {
         title = "Your accounting book has a new member";
-        message = newMemberName + " just joined your " + bookName;
+        message = newMemberName + " has joined " + bookName;
         break;
       }
     }
