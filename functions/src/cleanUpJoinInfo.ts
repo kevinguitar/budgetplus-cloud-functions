@@ -5,7 +5,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// Clean up join info  a month ago.
+// Clean up join info a month ago.
 export const cleanUpJoinInfo = baseFunctions.pubsub
     // Schedule for the 1st day of every month
     // https://crontab.guru/#0_0_1_*_*
