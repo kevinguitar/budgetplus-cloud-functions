@@ -19,3 +19,4 @@ jobs:
           cd functions
           npm install
           npm run build
+          npm run lint
