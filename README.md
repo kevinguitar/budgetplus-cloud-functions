@@ -30,7 +30,12 @@ firebase deploy
 
 Deploy a specific function to the cloud:
 ```bash
-firebase deploy --only functions:functionName
+firebase deploy --only functions:myFunction, functions:myOtherFunction
+```
+
+Delete functions on the cloud:
+```bash
+firebase functions:delete myFunction myOtherFunction
 ```
 
 For more usages, refer to:

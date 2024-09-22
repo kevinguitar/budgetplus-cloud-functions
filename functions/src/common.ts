@@ -1,11 +1,14 @@
+import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
 /* eslint-disable */
-export const serviceAccount = require("../service-account.json");
+const serviceAccount = require("../service-account.json");
 
-export const baseFunctions = functions
-    .runWith({serviceAccount: serviceAccount.client_email})
-    .region("asia-southeast1");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+functions.setGlobalOptions({region: "asia-southeast1"});
 
 export const internalRecipientIds = [
   "wStzA9aMwHd0pOGwyT0woBrf05q2",

@@ -1,13 +1,9 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, serviceAccount} from "../common";
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+import * as functions from "firebase-functions";
 
 // Delete those book that was delete in older version without archivedOn field.
 // eslint-disable-next-line max-len
-export const cleanUpArchivedBooksLegacy = baseFunctions.https.onRequest(async (req, resp) => {
+export const cleanUpArchivedBooksLegacy = functions.https.onRequest(async (req, resp) => {
   const lastMonth = Date.now() - 2629800000;
 
   const archivedBookList = await admin

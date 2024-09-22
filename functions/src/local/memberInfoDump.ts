@@ -1,12 +1,8 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, serviceAccount} from "../common";
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+import * as functions from "firebase-functions";
 
 // eslint-disable-next-line max-len
-export const memberInfoDump = baseFunctions.https.onRequest(async (req, resp) => {
+export const memberInfoDump = functions.https.onRequest(async (req, resp) => {
   const members = await admin.firestore()
       .collection("users")
       .where("premium", "==", true)

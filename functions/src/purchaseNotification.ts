@@ -1,24 +1,29 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, internalRecipientIds, serviceAccount} from "./common";
+import * as functions from "firebase-functions";
+import {internalRecipientIds} from "./common";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-export const purchaseNotification = baseFunctions
+export const purchaseNotification = functions
     .firestore
-    .document("purchases/{purchase_id}")
-    .onCreate(async (change) => {
+    .onDocumentCreated("purchases/{purchase_id}", async (event) => {
       try {
-        const userId: string = change.data().userId;
-        const productId: string = change.data().productId;
+        const snapshot = event.data;
+        if (!snapshot) {
+          console.log("No data associated with the event");
+          return;
+        }
+        const userId: string = snapshot.data().userId;
+        const productId: string = snapshot.data().productId;
         await sendNotification(userId, productId);
       } catch (error) {
         console.log(error);
       }
     });
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Send push notifications to internal users on every new purchases.
+ * @param {string} userId The user who made the purchase.
+ * @param {string} productId The product id the user purchased.
+ */
 async function sendNotification(
     userId: string,
     productId: string,

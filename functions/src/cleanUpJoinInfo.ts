@@ -1,16 +1,14 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, serviceAccount} from "./common";
+import * as functions from "firebase-functions";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-// Clean up join info a month ago.
-export const cleanUpJoinInfo = baseFunctions.pubsub
+/**
+ * Clean up stale join info that were created a month ago.
+ */
+export const cleanUpJoinInfo = functions
+    .scheduler
     // Schedule for the 1st day of every month
     // https://crontab.guru/#0_0_1_*_*
-    .schedule("0 0 1 * *")
-    .onRun(async () => {
+    .onSchedule("0 0 1 * *", async () => {
       try {
         console.log("Clean up join info job has started!");
 

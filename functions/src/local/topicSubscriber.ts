@@ -1,12 +1,8 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, serviceAccount} from "../common";
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+import * as functions from "firebase-functions";
 
 // eslint-disable-next-line max-len
-export const topicSubscriber = baseFunctions.https.onRequest(async (req, resp) => {
+export const topicSubscriber = functions.https.onRequest(async (req, resp) => {
   try {
     const allUsersPromise = admin.firestore()
         .collection("users")

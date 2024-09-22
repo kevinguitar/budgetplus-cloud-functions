@@ -1,16 +1,14 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, serviceAccount} from "./common";
+import * as functions from "firebase-functions";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-// Clean up archived books and records deleted a month ago.
-export const cleanUpArchivedBooks = baseFunctions.pubsub
+/**
+ * Clean up archived books and records deleted a month ago.
+ */
+export const cleanUpArchivedBooks = functions
+    .scheduler
     // Schedule for the 1st day of every month
     // https://crontab.guru/#0_0_1_*_*
-    .schedule("0 0 1 * *")
-    .onRun(async () => {
+    .onSchedule("0 0 1 * *", async () => {
       try {
         const lastMonth = Date.now() - 2629800000;
 

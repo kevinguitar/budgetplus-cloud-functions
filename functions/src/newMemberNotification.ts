@@ -1,18 +1,19 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, serviceAccount} from "./common";
+import * as functions from "firebase-functions";
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-export const newMemberNotification = baseFunctions
+export const newMemberNotification = functions
     .firestore
-    .document("books/{book_id}")
-    .onUpdate(async (change) => {
+    .onDocumentUpdated("books/{book_id}", async (event) => {
       try {
-        const bookName: string = change.after.data().name;
-        const oldMemberIds: string[] = change.before.data().authors;
-        const newMemberIds: string[] = change.after.data().authors;
+        const snapshot = event.data;
+        if (!snapshot) {
+          console.log("No data associated with the event");
+          return;
+        }
+
+        const bookName: string = snapshot.after.data().name;
+        const oldMemberIds: string[] = snapshot.before.data().authors;
+        const newMemberIds: string[] = snapshot.after.data().authors;
 
         if (newMemberIds.length == oldMemberIds.length + 1) {
           console.log("Detected new member joining");
@@ -24,7 +25,12 @@ export const newMemberNotification = baseFunctions
       }
     });
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Send push notifications when new members join the accounting book.
+ * @param {string} bookName The book name reflects on the document update.
+ * @param {string} newMemberId The member's id who just joined.
+ * @param {string[]} existingMemberIds The existing members' ids of the book.
+ */
 async function sendNotificationToUsers(
     bookName: string,
     newMemberId: string,

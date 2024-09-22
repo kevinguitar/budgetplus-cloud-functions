@@ -1,24 +1,28 @@
 import * as admin from "firebase-admin";
-import {baseFunctions, internalRecipientIds, serviceAccount} from "./common";
+import * as functions from "firebase-functions";
+import {internalRecipientIds} from "./common";
 import {firestore} from "firebase-admin";
 import DocumentData = firestore.DocumentData;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-export const pushNotificationSender = baseFunctions
+export const pushNotificationSender = functions
     .firestore
-    .document("push_notifications/{push_id}")
-    .onCreate(async (change) => {
+    .onDocumentCreated("push_notifications/{push_id}", async (event) => {
       try {
-        await sendPushNotification(change.data());
+        const snapshot = event.data;
+        if (!snapshot) {
+          console.log("No data associated with the event");
+          return;
+        }
+        await sendPushNotification(snapshot.data());
       } catch (error) {
         console.log(error);
       }
     });
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * Send general push notifications via topic.
+ * @param {DocumentData} data The document created on Firestore.
+ */
 async function sendPushNotification(
     data: DocumentData
 ) {
