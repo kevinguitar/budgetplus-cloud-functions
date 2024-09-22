@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable */
 export const serviceAccount = require("../service-account.json");
 
 export const baseFunctions = functions
