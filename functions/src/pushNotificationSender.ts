@@ -72,14 +72,24 @@ async function sendPushNotification(
 
       if (fcmToken != null) {
         await messaging.send({token: fcmToken, ...messageTW});
-        await messaging.send({token: fcmToken, ...messageEN});
-        await messaging.send({token: fcmToken, ...messageJA});
+        if (data.titleCn != null) {
+          await messaging.send({token: fcmToken, ...messageEN});
+        }
+        if (data.titleJa != null) {
+          await messaging.send({token: fcmToken, ...messageJA});
+        }
       }
     }
   } else {
     await messaging.send({topic: "general_tw", ...messageTW});
-    await messaging.send({topic: "general_cn", ...messageCN});
-    await messaging.send({topic: "general_en", ...messageEN});
-    await messaging.send({topic: "general_ja", ...messageJA});
+    if (data.titleCn != null) {
+      await messaging.send({topic: "general_cn", ...messageCN});
+    }
+    if (data.titleEn != null) {
+      await messaging.send({topic: "general_en", ...messageEN});
+    }
+    if (data.titleJa != null) {
+      await messaging.send({topic: "general_ja", ...messageJA});
+    }
   }
 }
