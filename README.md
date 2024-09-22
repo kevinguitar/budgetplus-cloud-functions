@@ -23,9 +23,14 @@ Host a function that declared in `package.json`'s `main` locally:
 firebase serve --only functions
 ```
 
-Deploy a function to the cloud:
+Deploy all functions to the cloud:
 ```bash
 firebase deploy
+```
+
+Deploy a specific function to the cloud:
+```bash
+firebase deploy --only functions:functionName
 ```
 
 For more usages, refer to:
