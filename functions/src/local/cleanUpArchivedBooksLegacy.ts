@@ -1,5 +1,8 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import {initializeApp} from "../common";
+
+initializeApp();
 
 // Delete those book that was delete in older version without archivedOn field.
 // eslint-disable-next-line max-len

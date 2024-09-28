@@ -1,8 +1,10 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import {internalRecipientIds} from "./common";
+import {initializeApp, internalRecipientIds} from "./common";
 import {firestore} from "firebase-admin";
 import DocumentData = firestore.DocumentData;
+
+initializeApp();
 
 export const pushNotificationSender = functions
     .firestore

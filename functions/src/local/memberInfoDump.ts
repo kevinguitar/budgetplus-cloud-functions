@@ -1,5 +1,8 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import {initializeApp} from "../common";
+
+initializeApp();
 
 // eslint-disable-next-line max-len
 export const memberInfoDump = functions.https.onRequest(async (req, resp) => {

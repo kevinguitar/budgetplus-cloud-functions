@@ -1,6 +1,8 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import {internalRecipientIds} from "./common";
+import {initializeApp, internalRecipientIds} from "./common";
+
+initializeApp();
 
 export const purchaseNotification = functions
     .firestore

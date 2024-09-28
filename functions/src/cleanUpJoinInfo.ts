@@ -1,5 +1,8 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import {initializeApp} from "./common";
+
+initializeApp();
 
 /**
  * Clean up stale join info that were created a month ago.
