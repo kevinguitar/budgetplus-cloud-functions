@@ -10,6 +10,7 @@ push notifications for Budget+ app.
 - Send push notifications to internal users on every new purchases: [purchaseNotification.ts](functions/src/purchaseNotification.ts)
 - Clean up the stale accounting book joining links in database: [cleanUpJoinInfo.ts](functions/src/cleanUpJoinInfo.ts)
 - Clean up the archived accounting books and their records in database: [cleanUpArchivedBooks.ts](functions/src/cleanUpArchivedBooks.ts)
+- Clean up the inactive users and their books in database: [cleanUpInactiveUsers.ts](functions/src/cleanUpInactiveUsers.ts)
 
 ## Build and Deploy
 

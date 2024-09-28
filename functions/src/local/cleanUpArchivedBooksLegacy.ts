@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import {initializeApp} from "../common";
+import {deleteBookAndRecords} from "../cleanUpUtils";
 
 initializeApp();
 
@@ -19,22 +20,7 @@ export const cleanUpArchivedBooksLegacy = functions.https.onRequest(async (req, 
       .get();
 
   for (const doc of archivedBookList.docs) {
-    // Delete the book
-    await doc.ref.delete();
-
-    // Delete all records
-    const records = await admin
-        .firestore()
-        .collection("books/" + doc.id + "/records")
-        .get();
-
-    const deletePromises = records.docs.map((doc) => {
-      return doc.ref.delete();
-    });
-
-    await Promise.all(deletePromises);
-
-    console.log("deleted " + records.size + " records.");
+    await deleteBookAndRecords(doc);
   }
 
   resp.json("Deleted " + archivedBookList.size + " archived books!");
