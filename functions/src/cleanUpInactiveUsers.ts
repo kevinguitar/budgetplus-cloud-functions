@@ -21,6 +21,8 @@ export const cleanUpInactiveUsers = functions
             .firestore()
             .collection("users")
             .where("lastActiveOn", "<=", twoYearsAgo)
+            // Keep the premium users permanently.
+            .where("premium", "!=", true)
             .get();
 
         const deletePromises = inactiveUsers.docs.map((doc) => {
