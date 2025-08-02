@@ -19,6 +19,7 @@ firebase-debug.*.log*
 
 functions/service-account.json
 .DS_Store
+.idea
 
 # Runtime data
 pids
