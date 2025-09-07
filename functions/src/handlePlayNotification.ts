@@ -32,17 +32,17 @@ export const handlePlayNotification =
 
         console.log(`Voided Purchase: Token=${purchaseToken}, OrderID=${orderId}`);
 
-        const purchase = await admin
+        const purchases = await admin
             .firestore()
             .collection("purchases")
             .where("orderId", "==", orderId)
             .get();
-        if (purchase.size == 1) {
-          const user = purchase.docs[0];
-          const userId = user.get("userId");
-          const username = user.get("name");
-          const userPhotoUrl = user.get("photoUrl");
-          const createdOn = user.get("createdOn");
+        if (purchases.size == 1) {
+          const userId = purchases.docs[0].get("userId");
+          const userSnap = await admin.firestore().doc("users" + userId).get();
+          const username = userSnap.get("name");
+          const userPhotoUrl = userSnap.get("photoUrl");
+          const createdOn = userSnap.get("createdOn");
           const eightHourMillis = 3600000 * 8;
           const joinDate = new Date(+createdOn + eightHourMillis).toLocaleString("zh-TW");
 
@@ -62,7 +62,7 @@ export const handlePlayNotification =
               userPhotoUrl
           );
         } else {
-          console.error(`purchase with order ${orderId} has unexpected size ${purchase.size}`);
+          console.error(`purchase with order ${orderId} has unexpected size ${purchases.size}`);
           return;
         }
       }
