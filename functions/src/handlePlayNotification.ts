@@ -39,7 +39,8 @@ export const handlePlayNotification =
             .get();
         if (purchases.size == 1) {
           const userId = purchases.docs[0].get("userId");
-          const userSnap = await admin.firestore().doc("users" + userId).get();
+          const userDoc = admin.firestore().doc("users/" + userId);
+          const userSnap = await userDoc.get();
           const username = userSnap.get("name");
           const userPhotoUrl = userSnap.get("photoUrl");
           const createdOn = userSnap.get("createdOn");
@@ -47,8 +48,7 @@ export const handlePlayNotification =
           const joinDate = new Date(+createdOn + eightHourMillis).toLocaleString("zh-TW");
 
           // Revoke the user's premium entitlement
-          await admin.firestore().doc("users/" + userId)
-              .update({premium: false});
+          await userDoc.update({premium: false});
 
           const books = await admin
               .firestore()
