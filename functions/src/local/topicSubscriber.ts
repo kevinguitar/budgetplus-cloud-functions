@@ -4,7 +4,6 @@ import {initializeApp} from "../common";
 
 initializeApp();
 
-// eslint-disable-next-line max-len
 export const topicSubscriber = functions.https.onRequest(async (req, resp) => {
   try {
     const allUsersPromise = admin.firestore()
@@ -42,8 +41,7 @@ export const topicSubscriber = functions.https.onRequest(async (req, resp) => {
 
     await Promise.all(promises);
 
-    // eslint-disable-next-line max-len
-    resp.json("Done! Sucessfully subscribe for " + promises.length + " users.");
+    resp.json("Done! Successfully subscribe for " + promises.length + " users.");
   } catch (error) {
     console.log(error);
     resp.status(500).send(error);

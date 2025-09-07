@@ -5,6 +5,7 @@ This repository contains all the cloud functions that deal with database interac
 push notifications for Budget+ app.
 
 ## Functions Overview
+- Handle Google Play voided purchases: [handlePlayNotification.ts](functions/src/handlePlayNotification.ts)
 - Send push notifications when new members join the accounting book: [newMemberNotification.ts](functions/src/newMemberNotification.ts)
 - Send general push notifications via topic: [pushNotificationSender.ts](functions/src/pushNotificationSender.ts)
 - Send push notifications to internal users on every new purchases: [purchaseNotification.ts](functions/src/purchaseNotification.ts)

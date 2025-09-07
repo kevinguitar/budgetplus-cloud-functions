@@ -39,7 +39,6 @@ async function sendNotificationToUsers(
     newMemberId: string,
     existingMemberIds: string[],
 ) {
-  // eslint-disable-next-line max-len
   console.log("Ready to send notification to " + existingMemberIds.length + " users");
   const newMemberSnap = await admin
       .firestore()
@@ -97,7 +96,6 @@ async function sendNotificationToUsers(
     };
 
     if (fcmToken != null && language != null) {
-      // eslint-disable-next-line max-len
       console.log("Sending to userId=" + member.get("id") + ", fcm=" + fcmToken + ", lan=" + language);
       sendNotificationPromises.push(
           admin.messaging().send(messagePayload)
