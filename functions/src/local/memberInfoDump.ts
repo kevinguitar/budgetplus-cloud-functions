@@ -4,7 +4,6 @@ import {initializeApp} from "../common";
 
 initializeApp();
 
-// eslint-disable-next-line max-len
 export const memberInfoDump = functions.https.onRequest(async (req, resp) => {
   const members = await admin.firestore()
       .collection("users")

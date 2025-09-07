@@ -5,8 +5,7 @@ import {deleteBookAndRecords} from "../cleanUpUtils";
 
 initializeApp();
 
-// Delete those book that was delete in older version without archivedOn field.
-// eslint-disable-next-line max-len
+// Delete those book that was deleted in older version without archivedOn field.
 export const cleanUpArchivedBooksLegacy = functions.https.onRequest(async (req, resp) => {
   const lastMonth = Date.now() - 2629800000;
 

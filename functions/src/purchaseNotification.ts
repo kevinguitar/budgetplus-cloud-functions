@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import {initializeApp, internalRecipientIds} from "./common";
+import {initializeApp, sendNotificationToInternalRecipients} from "./common";
 
 initializeApp();
 
@@ -35,7 +35,6 @@ async function sendNotification(
   const userPhotoUrl = userSnap.get("photoUrl");
   const createdOn = userSnap.get("createdOn");
   const eightHourMillis = 3600000 * 8;
-  // eslint-disable-next-line max-len
   const joinDate = new Date(+createdOn + eightHourMillis).toLocaleString("zh-TW");
 
   let product;
@@ -46,21 +45,9 @@ async function sendNotification(
     }
   }
 
-  for (const recipientId of internalRecipientIds) {
-    const recipient = await admin.firestore().doc("users/" + recipientId).get();
-    const fcmToken = recipient.get("fcmToken");
-    const messagePayload = {
-      token: fcmToken,
-      data: {
-        type: "general",
-        title: "現金入袋 🤑",
-        body: username + "購買了" + product + "\n加入時間：" + joinDate,
-        smallImageUrl: userPhotoUrl,
-      },
-    };
-
-    if (fcmToken != null) {
-      await admin.messaging().send(messagePayload);
-    }
-  }
+  await sendNotificationToInternalRecipients(
+      "現金入袋 🤑",
+      username + "購買了" + product + "\n加入時間：" + joinDate,
+      userPhotoUrl
+  );
 }
