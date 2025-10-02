@@ -12,7 +12,10 @@ export const cleanUpInactiveUsers = functions
     .scheduler
     // Schedule for the 1st day of every month
     // https://crontab.guru/#0_0_1_*_*
-    .onSchedule("0 0 1 * *", async () => {
+    .onSchedule({
+      schedule: "0 0 1 * *",
+      memory: "512MiB", // default 256 is not enough
+    }, async () => {
       try {
         console.log("Clean up inactive users job has started!");
 
@@ -21,18 +24,20 @@ export const cleanUpInactiveUsers = functions
             .firestore()
             .collection("users")
             .where("lastActiveOn", "<=", twoYearsAgo)
-            // Keep the premium users permanently.
-            .where("premium", "!=", true)
             .get();
 
-        const deletePromises = inactiveUsers.docs.map((doc) => {
-          deleteOwnedBooks(doc.id);
-          return doc.ref.delete();
-        });
+        const deletePromises = inactiveUsers.docs
+            // Keep the premium users permanently.
+            .filter((doc) => doc.data().premium !== true)
+            .map((doc) => {
+              deleteOwnedBooks(doc.id);
+              return doc.ref.delete();
+            });
 
         await Promise.all(deletePromises);
 
-        console.log("Deleted " + inactiveUsers.size + " inactive users!");
+        console.log("Deleted " + deletePromises.length + " inactive users! " +
+            (inactiveUsers.size - deletePromises.length) + " are premium users.");
       } catch (e) {
         console.log(e);
       }
