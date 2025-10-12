@@ -44,7 +44,6 @@ module.exports = defineConfig([{
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
-        "google",
         "plugin:@typescript-eslint/recommended",
     )),
 
