@@ -29,8 +29,8 @@ export const cleanUpInactiveUsers = functions
         const deletePromises = inactiveUsers.docs
             // Keep the premium users permanently.
             .filter((doc) => doc.data().premium !== true)
-            .map((doc) => {
-              deleteOwnedBooks(doc.id);
+            .map(async (doc) => {
+              await deleteOwnedBooks(doc.id);
               return doc.ref.delete();
             });
 
