@@ -39,15 +39,33 @@ async function sendNotification(
 
   let product;
   switch (productId) {
+    // Legacy product
     case "budgetplus.premium": {
-      product = "極簡記帳進階版";
+      product = "極簡記帳進階版（舊）";
+      break;
+    }
+
+    case "budgetplus-premium-monthly":
+    case "budgetplus.premium.monthly": {
+      product = "月度方案";
+      break;
+    }
+
+    case "budgetplus-premium-annual":
+    case "budgetplus.premium.annual":{
+      product = "年度方案";
+      break;
+    }
+
+    case "budgetplus.premium.lifetime": {
+      product = "終生方案";
       break;
     }
   }
 
   await sendNotificationToInternalRecipients(
       "現金入袋 🤑",
-      username + "購買了" + product + "\n加入時間：" + joinDate,
+      username + " 購買了" + product + "\n加入時間：" + joinDate,
       userPhotoUrl
   );
 }
