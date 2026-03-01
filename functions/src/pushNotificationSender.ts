@@ -22,13 +22,14 @@ export const pushNotificationSender = functions
     });
 
 /**
- * Send general push notifications via topic.
+ * Send general push notifications via topics.
  * @param {DocumentData} data The document created on Firestore.
  */
 async function sendPushNotification(
     data: DocumentData
 ) {
   const isInternal = data.internal;
+  const targetAudience = data.targetAudience;
   const deeplink = data.deeplink;
   const messaging = admin.messaging();
 
@@ -68,6 +69,13 @@ async function sendPushNotification(
     },
   };
 
+  let topicPrefix = "general_";
+  if (targetAudience === "FreeUsers") {
+    topicPrefix = "free_user_";
+  } else if (targetAudience === "PaidUsers") {
+    topicPrefix = "paid_user_";
+  }
+
   if (isInternal) {
     for (const recipientId of internalRecipientIds) {
       const recipient = await admin
@@ -87,15 +95,15 @@ async function sendPushNotification(
       }
     }
   } else {
-    await messaging.send({topic: "general_tw", ...messageTW});
+    await messaging.send({topic: topicPrefix + "tw", ...messageTW});
     if (data.titleCn != null) {
-      await messaging.send({topic: "general_cn", ...messageCN});
+      await messaging.send({topic: topicPrefix + "cn", ...messageCN});
     }
     if (data.titleEn != null) {
-      await messaging.send({topic: "general_en", ...messageEN});
+      await messaging.send({topic: topicPrefix + "en", ...messageEN});
     }
     if (data.titleJa != null) {
-      await messaging.send({topic: "general_ja", ...messageJA});
+      await messaging.send({topic: topicPrefix + "ja", ...messageJA});
     }
   }
 }
