@@ -15,7 +15,8 @@ export const purchaseNotification = functions
         }
         const userId: string = snapshot.data().userId;
         const productId: string = snapshot.data().productId;
-        await sendNotification(userId, productId);
+        const client: string = snapshot.data().client;
+        await sendNotification(userId, productId, client);
       } catch (error) {
         console.log(error);
       }
@@ -25,10 +26,12 @@ export const purchaseNotification = functions
  * Send push notifications to internal users on every new purchases.
  * @param {string} userId The user who made the purchase.
  * @param {string} productId The product id the user purchased.
+ * @param {string} client The client name where the purchase was made.
  */
 async function sendNotification(
     userId: string,
     productId: string,
+    client: string,
 ) {
   const userSnap = await admin.firestore().doc("users/" + userId).get();
   const username = userSnap.get("name");
@@ -39,7 +42,7 @@ async function sendNotification(
 
   let product;
   switch (productId) {
-    // Legacy product
+      // Legacy product
     case "budgetplus.premium": {
       product = "極簡記帳進階版（舊）";
       break;
@@ -52,7 +55,7 @@ async function sendNotification(
     }
 
     case "budgetplus-premium-annual":
-    case "budgetplus.premium.annual":{
+    case "budgetplus.premium.annual": {
       product = "年度方案";
       break;
     }
@@ -63,8 +66,9 @@ async function sendNotification(
     }
   }
 
+  const emoji = (client == "iOS") ? "🍎" : "🤖";
   await sendNotificationToInternalRecipients(
-      "現金入袋 🤑",
+      "現金入袋 🤑" + emoji,
       username + " 購買了" + product + "\n加入時間：" + joinDate,
       userPhotoUrl
   );
