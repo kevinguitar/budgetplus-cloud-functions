@@ -23,3 +23,21 @@ export async function deleteBookAndRecords(book: QueryDocumentSnapshot) {
 
   console.log("deleted " + records.size + " records in " + book.id);
 }
+
+/**
+ * Find all the books belong to the user, and delete them.
+ * @param {string} userId The inactive user.
+ */
+export async function deleteOwnedBooks(userId: string) {
+  const ownedBooks = await admin
+      .firestore()
+      .collection("books")
+      .where("ownerId", "==", userId)
+      .get();
+
+  for (const doc of ownedBooks.docs) {
+    await deleteBookAndRecords(doc);
+  }
+
+  console.log("Deleted " + ownedBooks.size + " book from " + userId);
+}
