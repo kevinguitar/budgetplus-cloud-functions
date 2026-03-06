@@ -9,9 +9,9 @@ export function initializeApp(): void {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
     });
-  }
 
-  functions.setGlobalOptions({region: "asia-southeast1"});
+    functions.setGlobalOptions({region: "asia-southeast1"});
+  }
 }
 
 export const internalRecipientIds = [
