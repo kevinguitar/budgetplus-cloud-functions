@@ -45,8 +45,8 @@ For more usages, refer to:
 - Official samples: https://github.com/firebase/functions-samples
 - Official docs: https://firebase.google.com/docs/reference/functions
 
-## Android Client
-https://github.com/kevinguitar/budgetplus-android
+## Mobile Client
+https://github.com/kevinguitar/budgetplus
 
 ## License
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
