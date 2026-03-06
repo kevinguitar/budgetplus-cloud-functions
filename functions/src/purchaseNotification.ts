@@ -61,7 +61,7 @@ async function sendNotification(
     }
 
     case "budgetplus.premium.lifetime": {
-      product = "終生方案";
+      product = "終身方案";
       break;
     }
   }
