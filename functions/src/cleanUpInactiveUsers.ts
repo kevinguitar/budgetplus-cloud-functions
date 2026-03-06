@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import {initializeApp} from "./common";
-import {deleteBookAndRecords} from "./cleanUpUtils";
+import {deleteOwnedBooks} from "./cleanUpUtils";
 
 initializeApp();
 
@@ -42,21 +42,3 @@ export const cleanUpInactiveUsers = functions
         console.log(e);
       }
     });
-
-/**
- * Find all the books belong to the user, and delete them.
- * @param {string} userId The inactive user.
- */
-async function deleteOwnedBooks(userId: string) {
-  const ownedBooks = await admin
-      .firestore()
-      .collection("books")
-      .where("ownerId", "==", userId)
-      .get();
-
-  for (const doc of ownedBooks.docs) {
-    await deleteBookAndRecords(doc);
-  }
-
-  console.log("Deleted " + ownedBooks.size + " book from " + userId);
-}

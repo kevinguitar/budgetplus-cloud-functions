@@ -12,12 +12,13 @@ push notifications for Budget+ app.
 - Clean up the stale accounting book joining links in database: [cleanUpJoinInfo.ts](functions/src/cleanUpJoinInfo.ts)
 - Clean up the archived accounting books and their records in database: [cleanUpArchivedBooks.ts](functions/src/cleanUpArchivedBooks.ts)
 - Clean up the inactive users and their books in database: [cleanUpInactiveUsers.ts](functions/src/cleanUpInactiveUsers.ts)
+- Delete a user account and all owned books upon request: [deleteUserAccount.ts](functions/src/deleteUserAccount.ts)
 
 ## Build and Deploy
 
 Build the project:
 ```bash
-npm run build
+cd functions && npm run build
 ```
 
 Host a function that declared in `package.json`'s `main` locally:

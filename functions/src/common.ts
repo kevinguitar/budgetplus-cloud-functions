@@ -5,9 +5,11 @@ import * as functions from "firebase-functions";
 const serviceAccount = require("../service-account.json");
 
 export function initializeApp(): void {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+  if (admin.apps.length === 0) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  }
 
   functions.setGlobalOptions({region: "asia-southeast1"});
 }
