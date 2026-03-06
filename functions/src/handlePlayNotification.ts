@@ -1,5 +1,5 @@
 import {onMessagePublished} from "firebase-functions/v2/pubsub";
-import {initializeApp, sendNotificationToInternalRecipients} from "./common";
+import {initializeApp} from "./common";
 import * as admin from "firebase-admin";
 
 initializeApp();
@@ -40,27 +40,10 @@ export const handlePlayNotification =
         if (purchases.size == 1) {
           const userId = purchases.docs[0].get("userId");
           const userDoc = admin.firestore().doc("users/" + userId);
-          const userSnap = await userDoc.get();
-          const username = userSnap.get("name");
-          const userPhotoUrl = userSnap.get("photoUrl");
-          const createdOn = userSnap.get("createdOn");
-          const eightHourMillis = 3600000 * 8;
-          const joinDate = new Date(+createdOn + eightHourMillis).toLocaleString("zh-TW");
 
           // Revoke the user's premium entitlement
           await userDoc.update({premium: false});
-
-          const books = await admin
-              .firestore()
-              .collection("books")
-              .where("ownerId", "==", userId)
-              .get();
-
-          await sendNotificationToInternalRecipients(
-              "被退款惹 🥲",
-              username + `有${books.size}本帳本` + "\n加入時間：" + joinDate,
-              userPhotoUrl
-          );
+          console.log("Revoked premium entitlement for user: " + userId);
         } else {
           console.error(`purchase with order ${orderId} has unexpected size ${purchases.size}`);
           return;
