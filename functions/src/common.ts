@@ -29,6 +29,19 @@ export async function sendNotificationToInternalRecipients(
     const fcmToken = recipient.get("fcmToken");
     const messagePayload = {
       token: fcmToken,
+      apns: {
+        payload: {
+          aps: {
+            alert: {
+              title: title,
+              body: body,
+            },
+          }
+        },
+        fcmOptions: {
+          imageUrl: smallImageUrl
+        }
+      },
       data: {
         type: "general",
         title: title,

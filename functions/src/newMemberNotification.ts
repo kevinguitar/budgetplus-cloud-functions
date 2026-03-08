@@ -45,7 +45,7 @@ async function sendNotificationToUsers(
       .doc("users/" + newMemberId)
       .get();
   const newMemberName = newMemberSnap.get("name");
-  const newMemberPhotoUrl = newMemberSnap.get("photoUrl");
+  const newMemberPhotoUrl: string = newMemberSnap.get("photoUrl");
 
   const existingMemberPromises = existingMemberIds.map((id) => {
     return admin.firestore()
@@ -87,6 +87,19 @@ async function sendNotificationToUsers(
 
     const messagePayload = {
       token: fcmToken,
+      apns: {
+        payload: {
+          aps: {
+            alert: {
+              title: title,
+              body: message,
+            },
+          }
+        },
+        fcmOptions: {
+          imageUrl: newMemberPhotoUrl
+        }
+      },
       data: {
         type: "new_member",
         title: title,
