@@ -33,7 +33,7 @@ firebase deploy
 
 Deploy a specific function to the cloud:
 ```bash
-firebase deploy --only functions:myFunction, functions:myOtherFunction
+firebase deploy --only functions:myFunction
 ```
 
 Delete functions on the cloud:

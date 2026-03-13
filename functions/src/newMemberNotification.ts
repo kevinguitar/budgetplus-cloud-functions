@@ -78,6 +78,11 @@ async function sendNotificationToUsers(
         message = newMemberName + "は" + bookName + "に参加しました";
         break;
       }
+      case "ko": {
+        title = "가계부에 새로운 멤버가 참여했습니다";
+        message = newMemberName + "님이 " + bookName + "에 참여했습니다";
+        break;
+      }
       default: {
         title = "Your accounting book has a new member";
         message = newMemberName + " has joined " + bookName;

@@ -33,7 +33,7 @@ async function sendPushNotification(
   const deeplink = data.deeplink;
   const messaging = admin.messaging();
 
-  const messageTW = {
+  const messageTw = {
     data: {
       type: "general",
       title: data.titleTw,
@@ -42,7 +42,7 @@ async function sendPushNotification(
     },
   };
 
-  const messageCN = {
+  const messageCn = {
     data: {
       type: "general",
       title: data.titleCn,
@@ -51,7 +51,7 @@ async function sendPushNotification(
     },
   };
 
-  const messageEN = {
+  const messageEn = {
     data: {
       type: "general",
       title: data.titleEn,
@@ -60,11 +60,20 @@ async function sendPushNotification(
     },
   };
 
-  const messageJA = {
+  const messageJa = {
     data: {
       type: "general",
       title: data.titleJa,
       body: data.descJa,
+      url: deeplink,
+    },
+  };
+
+  const messageKo = {
+    data: {
+      type: "general",
+      title: data.titleKo,
+      body: data.descKo,
       url: deeplink,
     },
   };
@@ -85,25 +94,31 @@ async function sendPushNotification(
       const fcmToken = recipient.get("fcmToken");
 
       if (fcmToken != null) {
-        await messaging.send({token: fcmToken, ...messageTW});
+        await messaging.send({token: fcmToken, ...messageTw});
         if (data.titleCn != null) {
-          await messaging.send({token: fcmToken, ...messageEN});
+          await messaging.send({token: fcmToken, ...messageEn});
         }
         if (data.titleJa != null) {
-          await messaging.send({token: fcmToken, ...messageJA});
+          await messaging.send({token: fcmToken, ...messageJa});
+        }
+        if (data.titleKo != null) {
+          await messaging.send({token: fcmToken, ...messageKo});
         }
       }
     }
   } else {
-    await messaging.send({topic: topicPrefix + "tw", ...messageTW});
+    await messaging.send({topic: topicPrefix + "tw", ...messageTw});
     if (data.titleCn != null) {
-      await messaging.send({topic: topicPrefix + "cn", ...messageCN});
+      await messaging.send({topic: topicPrefix + "cn", ...messageCn});
     }
     if (data.titleEn != null) {
-      await messaging.send({topic: topicPrefix + "en", ...messageEN});
+      await messaging.send({topic: topicPrefix + "en", ...messageEn});
     }
     if (data.titleJa != null) {
-      await messaging.send({topic: topicPrefix + "ja", ...messageJA});
+      await messaging.send({topic: topicPrefix + "ja", ...messageJa});
+    }
+    if (data.titleKo != null) {
+      await messaging.send({topic: topicPrefix + "ko", ...messageKo});
     }
   }
 }
