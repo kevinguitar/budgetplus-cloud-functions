@@ -6,6 +6,7 @@ import {handlePlayNotification} from "./handlePlayNotification";
 import {newMemberNotification} from "./newMemberNotification";
 import {purchaseNotification} from "./purchaseNotification";
 import {pushNotificationSender} from "./pushNotificationSender";
+import {revenueCatWebhook} from "./revenueCatWebhook";
 
 export {
   cleanUpArchivedBooks,
@@ -16,4 +17,5 @@ export {
   newMemberNotification,
   purchaseNotification,
   pushNotificationSender,
+  revenueCatWebhook,
 };
