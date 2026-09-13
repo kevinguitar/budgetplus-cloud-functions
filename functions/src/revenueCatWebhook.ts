@@ -40,6 +40,13 @@ export const revenueCatWebhook = onRequest(async (req, res) => {
     const productId: string = event.product_id;
     const store: string = event.store;
 
+    // Skip monthly renewals.
+    if (eventType === "RENEWAL" && productId.includes("monthly")) {
+      console.log("Ignoring monthly renewal notification");
+      res.status(200).send("Monthly renewal ignored");
+      return;
+    }
+
     await sendNotification(appUserId, productId, store, eventType);
     res.status(200).send("OK");
   } catch (error) {
