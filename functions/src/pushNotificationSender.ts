@@ -96,6 +96,9 @@ async function sendPushNotification(
       if (fcmToken != null) {
         await messaging.send({token: fcmToken, ...messageTw});
         if (data.titleCn != null) {
+          await messaging.send({token: fcmToken, ...messageCn});
+        }
+        if (data.titleEn != null) {
           await messaging.send({token: fcmToken, ...messageEn});
         }
         if (data.titleJa != null) {
