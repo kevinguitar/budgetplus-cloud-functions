@@ -25,6 +25,11 @@ Build the project:
 cd functions && npm run build
 ```
 
+Run the unit tests with coverage (firebase-admin is faked in memory, no emulator or credentials needed):
+```bash
+cd functions && npm run test:coverage
+```
+
 Host a function that declared in `package.json`'s `main` locally:
 ```bash
 firebase serve --only functions
