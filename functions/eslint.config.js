@@ -4,26 +4,10 @@ const {
 } = require("eslint/config");
 
 const globals = require("globals");
-
-const {
-    fixupConfigRules,
-    fixupPluginRules,
-} = require("@eslint/compat");
-
+const js = require("@eslint/js");
 const tsParser = require("@typescript-eslint/parser");
 const typescriptEslint = require("@typescript-eslint/eslint-plugin");
-const _import = require("eslint-plugin-import");
-const js = require("@eslint/js");
-
-const {
-    FlatCompat,
-} = require("@eslint/eslintrc");
-
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+const importX = require("eslint-plugin-import-x");
 
 module.exports = defineConfig([{
     languageOptions: {
@@ -39,22 +23,25 @@ module.exports = defineConfig([{
         },
     },
 
-    extends: fixupConfigRules(compat.extends(
-        "eslint:recommended",
-        "plugin:import/errors",
-        "plugin:import/warnings",
-        "plugin:import/typescript",
-        "plugin:@typescript-eslint/recommended",
-    )),
+    extends: [
+        js.configs.recommended,
+        importX.flatConfigs.errors,
+        importX.flatConfigs.warnings,
+        importX.flatConfigs.typescript,
+        typescriptEslint.configs["flat/recommended"],
+    ],
 
-    plugins: {
-        "@typescript-eslint": fixupPluginRules(typescriptEslint),
-        import: fixupPluginRules(_import),
+    settings: {
+        "import-x/resolver-next": [
+            importX.createNodeResolver({
+                extensions: [".ts", ".tsx", ".js", ".jsx"],
+            }),
+        ],
     },
 
     rules: {
         "quotes": ["error", "double"],
-        "import/no-unresolved": 0,
+        "import-x/no-unresolved": 0,
         "max-len": 0,
     },
 }, globalIgnores(["lib/**/*"])]);
