@@ -1,7 +1,7 @@
 import {getFirestore} from "firebase-admin/firestore";
-import {getMessaging} from "firebase-admin/messaging";
+import {ApnsConfig, Message, getMessaging} from "firebase-admin/messaging";
 import * as functions from "firebase-functions";
-import {initializeApp} from "./common";
+import {initializeApp, isValidHttpUrl} from "./common";
 
 initializeApp();
 
@@ -45,7 +45,9 @@ async function sendNotificationToUsers(
       .doc("users/" + newMemberId)
       .get();
   const newMemberName = newMemberSnap.get("name");
-  const newMemberPhotoUrl: string = newMemberSnap.get("photoUrl");
+  const photoUrl = newMemberSnap.get("photoUrl");
+  const newMemberPhotoUrl: string = typeof photoUrl === "string" ? photoUrl : "";
+  const hasValidPhotoUrl = isValidHttpUrl(newMemberPhotoUrl);
 
   const existingMemberPromises = existingMemberIds.map((id) => {
     return getFirestore()
@@ -90,21 +92,26 @@ async function sendNotificationToUsers(
       }
     }
 
-    const messagePayload = {
-      token: fcmToken,
-      apns: {
-        payload: {
-          aps: {
-            alert: {
-              title: title,
-              body: message,
-            },
-          }
+    const apnsConfig: ApnsConfig = {
+      payload: {
+        aps: {
+          alert: {
+            title: title,
+            body: message,
+          },
         },
-        fcmOptions: {
-          imageUrl: newMemberPhotoUrl
-        }
       },
+    };
+
+    // Firebase rejects the whole message when apns.fcmOptions.imageUrl is an
+    // empty or otherwise invalid URL string, so only attach it when valid.
+    if (hasValidPhotoUrl) {
+      apnsConfig.fcmOptions = {imageUrl: newMemberPhotoUrl};
+    }
+
+    const messagePayload: Message = {
+      token: fcmToken,
+      apns: apnsConfig,
       data: {
         type: "new_member",
         title: title,

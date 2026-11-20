@@ -26,7 +26,7 @@ export const internalRecipientIds = [
  * @param {string} value The value to validate.
  * @return {boolean} True when the value is a valid http(s) URL.
  */
-function isValidHttpUrl(value: string): boolean {
+export function isValidHttpUrl(value: string): boolean {
   if (typeof value !== "string" || value.length === 0) {
     return false;
   }

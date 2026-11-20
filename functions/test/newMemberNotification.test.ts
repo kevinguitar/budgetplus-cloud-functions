@@ -122,13 +122,16 @@ it("logs and swallows send failures", async () => {
   expect(logSpy).toHaveBeenCalledWith(error);
 });
 
-// Known bug: same issue fixed for internal notifications in #87. FCM rejects
-// the whole message when apns.fcmOptions.imageUrl is not a valid URL or a data
-// value is not a string, so members never hear about a new member who has no
-// photo. Remove `.failing` once newMemberNotification guards the image URL.
-it.failing("still sends a valid message when the new member has no photo", async () => {
+// FCM rejects the whole message when apns.fcmOptions.imageUrl is not a valid
+// URL or a data value is not a string.
+it.each([
+  ["has no photo", {}, ""],
+  ["has a null photo", {photoUrl: null}, ""],
+  ["has an empty photo URL", {photoUrl: ""}, ""],
+  ["has an invalid photo URL", {photoUrl: "not a url"}, "not a url"],
+])("still sends a valid message when the new member %s", async (_, photo, expectedSmallImageUrl) => {
   seed({
-    "users/new": {id: "new", name: "Carol"},
+    "users/new": {id: "new", name: "Carol", ...photo},
     "users/a": {id: "a", fcmToken: "token-a", language: "en"},
   });
 
@@ -136,5 +139,6 @@ it.failing("still sends a valid message when the new member has no photo", async
 
   const message = messaging.send.mock.calls[0][0];
   expect(message.apns).not.toHaveProperty("fcmOptions");
-  expect(message.data.smallImageUrl).toBe("");
+  expect(message.data.smallImageUrl).toBe(expectedSmallImageUrl);
+  expect(message.data.body).toBe("Carol has joined Trip");
 });
