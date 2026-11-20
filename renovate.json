@@ -6,5 +6,12 @@
   "schedule" : [
     "every weekend"
   ],
-  "timezone" : "Asia/Singapore"
+  "timezone" : "Asia/Singapore",
+  "packageRules" : [
+    {
+      "description" : "firebase-admin still depends on buffer-equal-constant-time, which uses SlowBuffer, removed in Node 26. Remove this rule once firebase-functions loads on Node 26.",
+      "matchPackageNames" : ["node"],
+      "allowedVersions" : "<25"
+    }
+  ]
 }
