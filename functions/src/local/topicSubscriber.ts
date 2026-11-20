@@ -1,4 +1,5 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
+import {getMessaging} from "firebase-admin/messaging";
 import * as functions from "firebase-functions";
 import {initializeApp} from "../common";
 
@@ -6,7 +7,7 @@ initializeApp();
 
 export const topicSubscriber = functions.https.onRequest(async (req, resp) => {
   try {
-    const allUsersPromise = admin.firestore()
+    const allUsersPromise = getFirestore()
         .collection("users")
         .get();
 
@@ -36,7 +37,7 @@ export const topicSubscriber = functions.https.onRequest(async (req, resp) => {
             }
           }
 
-          return admin.messaging().subscribeToTopic(fcmToken, topic);
+          return getMessaging().subscribeToTopic(fcmToken, topic);
         });
 
     await Promise.all(promises);

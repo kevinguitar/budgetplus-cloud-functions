@@ -1,11 +1,11 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
 import {initializeApp} from "../common";
 
 initializeApp();
 
 export const memberInfoDump = functions.https.onRequest(async (req, resp) => {
-  const members = await admin.firestore()
+  const members = await getFirestore()
       .collection("users")
       .where("premium", "==", true)
       .get();

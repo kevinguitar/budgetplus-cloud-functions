@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
 import {initializeApp} from "../common";
 import {deleteBookAndRecords} from "../cleanUpUtils";
@@ -9,8 +9,7 @@ initializeApp();
 export const cleanUpArchivedBooksLegacy = functions.https.onRequest(async (req, resp) => {
   const lastMonth = Date.now() - 2629800000;
 
-  const archivedBookList = await admin
-      .firestore()
+  const archivedBookList = await getFirestore()
       .collection("books")
       .where("archived", "==", true)
       .where("createdOn", "<=", lastMonth)

@@ -1,8 +1,7 @@
-import * as admin from "firebase-admin";
+import {DocumentData, getFirestore} from "firebase-admin/firestore";
+import {getMessaging} from "firebase-admin/messaging";
 import * as functions from "firebase-functions";
 import {initializeApp, internalRecipientIds} from "./common";
-import {firestore} from "firebase-admin";
-import DocumentData = firestore.DocumentData;
 
 initializeApp();
 
@@ -31,7 +30,7 @@ async function sendPushNotification(
   const isInternal = data.internal;
   const targetAudience = data.targetAudience;
   const deeplink = data.deeplink;
-  const messaging = admin.messaging();
+  const messaging = getMessaging();
 
   const messageTw = {
     data: {
@@ -87,8 +86,7 @@ async function sendPushNotification(
 
   if (isInternal) {
     for (const recipientId of internalRecipientIds) {
-      const recipient = await admin
-          .firestore()
+      const recipient = await getFirestore()
           .doc("users/" + recipientId)
           .get();
       const fcmToken = recipient.get("fcmToken");

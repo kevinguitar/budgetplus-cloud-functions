@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import {QueryDocumentSnapshot} from "@google-cloud/firestore";
 
 /**
@@ -7,8 +7,7 @@ import {QueryDocumentSnapshot} from "@google-cloud/firestore";
  */
 export async function deleteBookAndRecords(book: QueryDocumentSnapshot) {
   // Delete all records
-  const records = await admin
-      .firestore()
+  const records = await getFirestore()
       .collection("books/" + book.id + "/records")
       .get();
 
@@ -29,8 +28,7 @@ export async function deleteBookAndRecords(book: QueryDocumentSnapshot) {
  * @param {string} userId The inactive user.
  */
 export async function deleteOwnedBooks(userId: string) {
-  const ownedBooks = await admin
-      .firestore()
+  const ownedBooks = await getFirestore()
       .collection("books")
       .where("ownerId", "==", userId)
       .get();

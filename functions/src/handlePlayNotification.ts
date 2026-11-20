@@ -1,6 +1,6 @@
 import {onMessagePublished} from "firebase-functions/v2/pubsub";
 import {initializeApp} from "./common";
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 
 initializeApp();
 
@@ -32,14 +32,13 @@ export const handlePlayNotification =
 
         console.log(`Voided Purchase: Token=${purchaseToken}, OrderID=${orderId}`);
 
-        const purchases = await admin
-            .firestore()
+        const purchases = await getFirestore()
             .collection("purchases")
             .where("orderId", "==", orderId)
             .get();
         if (purchases.size == 1) {
           const userId = purchases.docs[0].get("userId");
-          const userDoc = admin.firestore().doc("users/" + userId);
+          const userDoc = getFirestore().doc("users/" + userId);
 
           // Revoke the user's premium entitlement
           await userDoc.update({premium: false});

@@ -1,4 +1,5 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
+import {getMessaging} from "firebase-admin/messaging";
 import * as functions from "firebase-functions";
 import {initializeApp} from "./common";
 
@@ -40,15 +41,14 @@ async function sendNotificationToUsers(
     existingMemberIds: string[],
 ) {
   console.log("Ready to send notification to " + existingMemberIds.length + " users");
-  const newMemberSnap = await admin
-      .firestore()
+  const newMemberSnap = await getFirestore()
       .doc("users/" + newMemberId)
       .get();
   const newMemberName = newMemberSnap.get("name");
   const newMemberPhotoUrl: string = newMemberSnap.get("photoUrl");
 
   const existingMemberPromises = existingMemberIds.map((id) => {
-    return admin.firestore()
+    return getFirestore()
         .doc("users/" + id)
         .get();
   });
@@ -116,7 +116,7 @@ async function sendNotificationToUsers(
     if (fcmToken != null && language != null) {
       console.log("Sending to userId=" + member.get("id") + ", fcm=" + fcmToken + ", lan=" + language);
       sendNotificationPromises.push(
-          admin.messaging().send(messagePayload)
+          getMessaging().send(messagePayload)
       );
     }
   }

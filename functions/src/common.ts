@@ -1,13 +1,15 @@
-import * as admin from "firebase-admin";
+import {cert, getApps, initializeApp as initializeAdminApp} from "firebase-admin/app";
+import {getFirestore} from "firebase-admin/firestore";
+import {ApnsConfig, Message, getMessaging} from "firebase-admin/messaging";
 import * as functions from "firebase-functions";
 
 /* eslint-disable */
 const serviceAccount = require("../service-account.json");
 
 export function initializeApp(): void {
-  if (admin.apps.length === 0) {
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
+  if (getApps().length === 0) {
+    initializeAdminApp({
+      credential: cert(serviceAccount),
     });
 
     functions.setGlobalOptions({region: "asia-southeast1"});
@@ -45,13 +47,13 @@ export async function sendNotificationToInternalRecipients(
   const hasValidImageUrl = isValidHttpUrl(safeImageUrl);
 
   for (const recipientId of internalRecipientIds) {
-    const recipient = await admin.firestore().doc("users/" + recipientId).get();
+    const recipient = await getFirestore().doc("users/" + recipientId).get();
     const fcmToken = recipient.get("fcmToken");
     if (fcmToken == null) {
       continue;
     }
 
-    const apnsConfig: admin.messaging.ApnsConfig = {
+    const apnsConfig: ApnsConfig = {
       payload: {
         aps: {
           alert: {
@@ -68,7 +70,7 @@ export async function sendNotificationToInternalRecipients(
       apnsConfig.fcmOptions = {imageUrl: safeImageUrl};
     }
 
-    const messagePayload: admin.messaging.Message = {
+    const messagePayload: Message = {
       token: fcmToken,
       apns: apnsConfig,
       data: {
@@ -79,6 +81,6 @@ export async function sendNotificationToInternalRecipients(
       },
     };
 
-    await admin.messaging().send(messagePayload);
+    await getMessaging().send(messagePayload);
   }
 }
