@@ -6,5 +6,14 @@
   "schedule" : [
     "every weekend"
   ],
-  "timezone" : "Asia/Singapore"
+  "timezone" : "Asia/Singapore",
+  "packageRules" : [
+    {
+      "description" : "typescript-eslint does not support TypeScript 7 yet",
+      "matchPackageNames" : [
+        "typescript"
+      ],
+      "allowedVersions" : "<7"
+    }
+  ]
 }
