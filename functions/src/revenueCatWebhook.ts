@@ -1,6 +1,6 @@
 import {onRequest} from "firebase-functions/v2/https";
 import {initializeApp, sendNotificationToInternalRecipients} from "./common";
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 
 initializeApp();
 
@@ -123,7 +123,7 @@ async function sendNotification(
     store: string,
     eventType: string,
 ) {
-  const userSnap = await admin.firestore().doc("users/" + appUserId).get();
+  const userSnap = await getFirestore().doc("users/" + appUserId).get();
   const username = userSnap.exists ? userSnap.get("name") : appUserId;
   const userPhotoUrl = userSnap.exists ? userSnap.get("photoUrl") : "";
   const createdOn = userSnap.exists ? userSnap.get("createdOn") : null;

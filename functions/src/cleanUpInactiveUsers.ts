@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
 import {initializeApp} from "./common";
 import {deleteOwnedBooks} from "./cleanUpUtils";
@@ -20,8 +20,7 @@ export const cleanUpInactiveUsers = functions
         console.log("Clean up inactive users job has started!");
 
         const twoYearsAgo = Date.now() - 63072000000;
-        const inactiveUsers = await admin
-            .firestore()
+        const inactiveUsers = await getFirestore()
             .collection("users")
             .where("lastActiveOn", "<=", twoYearsAgo)
             .get();

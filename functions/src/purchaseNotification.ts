@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
 import {initializeApp, sendNotificationToInternalRecipients} from "./common";
 
@@ -33,7 +33,7 @@ async function sendNotification(
     productId: string,
     client: string,
 ) {
-  const userSnap = await admin.firestore().doc("users/" + userId).get();
+  const userSnap = await getFirestore().doc("users/" + userId).get();
   const username = userSnap.get("name");
   const userPhotoUrl = userSnap.get("photoUrl");
   const createdOn = userSnap.get("createdOn");

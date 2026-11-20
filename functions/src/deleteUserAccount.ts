@@ -1,4 +1,5 @@
-import * as admin from "firebase-admin";
+import {getAuth} from "firebase-admin/auth";
+import {getFirestore} from "firebase-admin/firestore";
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {initializeApp} from "./common";
 import {deleteOwnedBooks} from "./cleanUpUtils";
@@ -32,10 +33,10 @@ export const deleteUserAccount = onCall(async (request) => {
     await deleteOwnedBooks(userId);
 
     // After deleted books and records, delete the user from the /users DB
-    await admin.firestore().collection("users").doc(userId).delete();
+    await getFirestore().collection("users").doc(userId).delete();
 
     // Finally, delete account from Firebase Auth.
-    await admin.auth().deleteUser(userId);
+    await getAuth().deleteUser(userId);
 
     console.log(`Successfully deleted account for user: ${userId}`);
     return {success: true};

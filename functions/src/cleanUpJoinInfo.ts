@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import * as functions from "firebase-functions";
 import {initializeApp} from "./common";
 
@@ -16,8 +16,7 @@ export const cleanUpJoinInfo = functions
         console.log("Clean up join info job has started!");
 
         const lastMonth = Date.now() - 2629800000;
-        const joinInfoList = await admin
-            .firestore()
+        const joinInfoList = await getFirestore()
             .collection("join_info")
             .where("generatedOn", "<=", lastMonth)
             .get();
