@@ -34,12 +34,14 @@ it("deletes the caller's books, user document and auth account", async () => {
   expect(auth.deleteUser).toHaveBeenCalledWith("u1");
 });
 
-it("allows unauthenticated calls", async () => {
-  // Current behaviour: the ownership check only runs when request.auth is
-  // present, so an unauthenticated caller can delete any account.
-  await expect(call({userId: "u1"})).resolves.toEqual({success: true});
+it("rejects unauthenticated calls", async () => {
+  await expect(call({userId: "u1"})).rejects.toMatchObject({
+    code: "unauthenticated",
+  });
 
-  expect(auth.deleteUser).toHaveBeenCalledWith("u1");
+  expect(storedPaths()).toContain("users/u1");
+  expect(storedPaths()).toContain("books/owned");
+  expect(auth.deleteUser).not.toHaveBeenCalled();
 });
 
 it.each([

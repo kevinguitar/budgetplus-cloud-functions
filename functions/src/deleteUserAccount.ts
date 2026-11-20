@@ -10,6 +10,13 @@ initializeApp();
  * Delete a user account and all owned books.
  */
 export const deleteUserAccount = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+        "unauthenticated",
+        "You must be signed in to delete your account."
+    );
+  }
+
   const userId = request.data.userId;
 
   if (!userId) {
@@ -19,7 +26,7 @@ export const deleteUserAccount = onCall(async (request) => {
     );
   }
 
-  if (request.auth && request.auth.uid !== userId) {
+  if (request.auth.uid !== userId) {
     throw new HttpsError(
         "permission-denied",
         "You can only delete your own account."
